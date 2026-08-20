@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colegio San Ignacio - Interactive Oral Activity</title>
+    <style>
+        /* ==========================================================================
+           1. CORE STYLES & COLOR PALETTE (OXFORD BLUE THEME)
+           ========================================================================== */
+        :root {
+            --oxford-blue: #002147;
+            --oxford-blue-light: #1a365d;
+            --accent-gold: #d4af37;
+            --primary-hover: #0f2b5c;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --success: #10b981;
+            --success-hover: #059669;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           2. OXFORD BLUE HEADER SECTION
+           ========================================================================== */
+        header.oxford-header {
+            background-color: var(--oxford-blue);
+            color: #ffffff;
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
+            border-bottom: 5px solid var(--accent-gold);
+        }
+
+        header.oxford-header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        header.oxford-header h2 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #e2e8f0;
+            letter-spacing: 0.025em;
+        }
+
+        /* ==========================================================================
+           3. STUDENT DATA FORM (CLASS, NAME, DATE)
+           ========================================================================== */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .student-info-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--oxford-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background-color: #f8fafc;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--oxford-blue);
+            box-shadow: 0 0 0 3px rgba(0, 33, 71, 0.15);
+            background-color: #ffffff;
+        }
+
+        /* ==========================================================================
+           4. INSTRUCTIONS & MODEL AUDIO SECTION
+           ========================================================================== */
+        .instructions-card h3 {
+            font-size: 1.25rem;
+            color: var(--oxford-blue);
+            margin-bottom: 1rem;
+        }
+
+        .steps-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-item {
+            background: var(--bg-body);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--oxford-blue);
+            font-size: 0.95rem;
+        }
+
+        .step-number {
+            font-weight: bold;
+            color: var(--oxford-blue);
+            margin-right: 0.25rem;
+        }
+
+        .model-audio-box {
+            background: #f0fdf4;
+            border: 2px dashed #4ade80;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .model-audio-box label {
+            display: block;
+            font-weight: 700;
+            color: #166534;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* ==========================================================================
+           5. QUESTION & RECORDING CARDS
+           ========================================================================== */
+        .question-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--bg-body);
+            padding-bottom: 0.75rem;
+        }
+
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--oxford-blue);
+        }
+
+        .audio-player-wrapper {
+            background: var(--bg-body);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .audio-player-wrapper label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+            outline: none;
+        }
+
+        .recorder-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: #fafafa;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-color);
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-record {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-record:hover:not(:disabled) {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-stop {
+            background-color: var(--text-muted);
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            background-color: var(--text-main);
+        }
+
+        .btn-download {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-download:hover {
+            background-color: var(--success-hover);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+        }
+
+        .status-dot.active {
+            background-color: var(--danger);
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .student-playback {
+            margin-top: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .student-playback.visible {
+            display: flex;
+        }
+
+        .permission-warning {
+            background-color: #fef2f2;
+            color: var(--danger);
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem 0.5rem; }
+            header.oxford-header h1 { font-size: 1.75rem; }
+            .controls-group { flex-direction: column; align-items: stretch; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- OXFORD BLUE HEADER -->
+        <header class="oxford-header">
+            <h1>COLEGIO SAN IGNACIO</h1>
+            <h2>9th Grade - Interactive Oral Activity</h2>
+        </header>
+
+        <!-- STUDENT INFORMATION FORM -->
+        <section class="card">
+            <div class="student-info-form">
+                <div class="form-group">
+                    <label for="class-select">Class</label>
+                    <select id="class-select" class="form-control" onchange="updateStudentDropdown()">
+                        <option value="">Select your class</option>
+                        <option value="9th grade A">9th grade A</option>
+                        <option value="9th grade B">9th grade B</option>
+                        <option value="9th grade C">9th grade C</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="student-select">Student Name</label>
+                    <select id="student-select" class="form-control" disabled>
+                        <option value="">Select your name</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date-input">Date</label>
+                    <input type="date" id="date-input" class="form-control">
+                </div>
+            </div>
+        </section>
+
+        <!-- INSTRUCTIONS & MODEL AUDIO -->
+        <section class="card instructions-card">
+            <h3>Instructions</h3>
+            <ol class="steps-list">
+                <li class="step-item"><span class="step-number">1.</span> Select your <strong>Class</strong>, <strong>Name</strong>, and date above.</li>
+                <li class="step-item"><span class="step-number">2.</span> Listen to the <strong>conversation</strong> provided below. Pay attention to the context of the situation.</li>
+                <li class="step-item"><span class="step-number">3.</span> Listen to the question and prepare your answer.</li>
+                <li class="step-item"><span class="step-number">4.</span> Record your response and click <strong>Download Recording</strong>.</li>
+                <li class="step-item"><span class="step-number">5.</span> Upload all downloaded audio files to Google Classroom.</li>
+            </ol>
+
+            <!-- MODEL AUDIO PLAYER -->
+            <div class="model-audio-box">
+                <label>🎧 Listen carefully to this situation</label>
+                <audio controls src="magic coffee.mp3"></audio>
+            </div>
+        </section>
+
+        <!-- PERMISSION WARNING -->
+        <div id="mic-warning" class="permission-warning">
+            ⚠️ Microphone access is required for this activity. Please allow microphone permissions in your browser.
+        </div>
+
+        <!-- QUESTION -->
+        <article class="card question-card" id="q1">
+            <div class="question-header">
+                <span class="question-title">Question 1</span>
+            </div>
+            
+            <div class="audio-player-wrapper">
+                <label>1. Listen to the questions</label>
+                <audio controls src="magic coffee questions.mp3"></audio>
+            </div>
+
+            <div class="recorder-section">
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">2. Record Your Answer</label>
+                
+                <div class="controls-group">
+                    <button class="btn btn-record" onclick="startRecording(1)">
+                        🎤 Start Recording
+                    </button>
+                    <button class="btn btn-stop" onclick="stopRecording(1)" disabled>
+                        ⏹️ Stop Recording
+                    </button>
+                    <div class="recording-status">
+                        <span class="status-dot" id="dot-1"></span>
+                        <span id="status-1">Ready</span>
+                    </div>
+                </div>
+
+                <div class="student-playback" id="playback-container-1">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Listen to your recording & download for Classroom:</label>
+                    <audio id="audio-playback-1" controls></audio>
+                    <a id="download-btn-1" class="btn btn-download" download>
+                        📥 Download Recording (q1)
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Set default date to today
+        document.getElementById('date-input').valueAsDate = new Date();
+
+        // Student Database Organized by Class
+        const studentsData = {
+            "9th grade A": [
+                "Acevedo Ponce Felipe Ademar", "Aguilar Becerra Antonia", "Alarcón Quiroz Andrés Felipe", 
+                "Alvarado Ortiz Isidora Pilar", "Castillo Turres Catalina Sofía", "Cavieres Pasmino Eloísa Mercedes", 
+                "Centonzio Calderón Emily Raffaella", "Contreras San Martín Eva Ignacia", "Figueroa González María Consuelo", 
+                "Fuenzalida Parra Pedro", "Galdames Durán Francisca Antonia", "Gatica Knaak Vicente Ignacio", 
+                "González Encina Santiago Vicente", "Inzunza Cifuentes Nicolás Guillermo", "Mouat Aburto Martina Paz", 
+                "Orellana Beltrán Monserrat Francisca", "Ortiz Donoso Matilda Florencia", "Pfeng Gaspar Laura Amalia", 
+                "Pinochet Pinochet Alonso Eduardo", "Pinto Bastías Inti Benjamín", "Pizarro Paredes Sofía Ignacia", 
+                "Plaza Pereira Martín Alejandro", "Ponce Melero Francisca Ignacia", "Quinteros Mondiglio Raimundo Patricio", 
+                "Ramírez Bravo Francisco", "Ramírez Palacios Daniel Esteban", "Rivera Tudela Ignacio Alonso", 
+                "Riveros Reveco Amanda", "Rojas Albornoz Benjamín Alejandro", "Rubio Núñez Leonardo Alonso", 
+                "Soto Neira Amancay Rocío", "Valdés Velásquez Max Alejandro", "Valencia Zuzunaga Dhiamet Stefan", 
+                "Vergara Montenegro Rafaela Sofía", "Vergara Rojas Sofía María Susana", "Vides Correa María Paz", 
+                "Zapata Arancibia Agustín Andrés"
+            ],
+            "9th grade B": [
+                "Alarcón Vielma Maximiliano", "Amigo Piceros Amaro Jesús", "Aravena Albornoz Carlos Arturo", 
+                "Barrera Jaque Santiago Ernesto", "Carrasco Lazo Emilia Ignacia", "Cornejo Cáceres Laura Elena", 
+                "Eyzaguirre Silva Josefa Ignacia", "Farías Andrade Arturo Daniel", "Fonseca Chong Matilda Isidora", 
+                "Fredes Silva Martina Sofía", "García Ávila Rafaela Amparo", "García Isla Cristóbal", 
+                "Henríquez Miranda Matías Francisco", "Leal Guzmán Álvaro Fernando", "Luengo Valencia Lucas Fabián", 
+                "Méndez Sáez Catalina Ignacia", "Mora Palma Victoria Alejandra", "Nilo Miranda Rosario", 
+                "Ojeda Vera Joaquín Ignacio", "Olea Solís Eloísa Antonia", "Olivares Fincheira Guillermo Tomás", 
+                "Padilla Burchard Felipe Ignacio", "Páez Hidalgo Montserrat Ignacia", "Palacios Solari Javier Agustín", 
+                "Quiroz Peña Agustina", "Riveros Álvarez Diego Arturo", "Rojas Edmonds Florencia Antonia Angélica", 
+                "San Martín Arias Magdalena Esperanza", "Sánchez Moraga Cristóbal Arturo", "Sarria Astudillo Esteban Alonso", 
+                "Stager Aguilera Francisca Emilia", "Valdenegro Román Vicente Maximiliano", "Valderas Ortega Facundo Nicanor", 
+                "Valenzuela González José Tomás", "Vermeer Gutiérrez Anouk", "Villagra Alarcón Sofía Antonieta"
+            ],
+            "9th grade C": [
+                "Aburto Romero Diego Esteban", "Araya Escalona María Jesús", "Bravo Zapata Isidora Francisca", 
+                "Cáceres Arredondo Isidora Montserrat", "Castillo Reichhardt Valentín", "Espinosa Bravo Carlos Joaquín", 
+                "Espinoza Ojeda Camila Ignacia", "Evert Quinteros Alisson Fernanda", "González Marzán Mateo Alfredo", 
+                "Hernández Martínez Francisco Javier", "Hiplan Godoy Santino Luis", "Lagos Urra Leticia Carolina", 
+                "Leal Rubio Isidora Ignacia", "Montenegro Ramos Ignacio", "Moya Madero Joaquín Esteban", 
+                "Navarro Bravo Amanda Sofía", "Osorio Vivar Víctor André", "Pavez Veliz Clemente", 
+                "Pinto Celis Martín Ignacio", "Poblete Espinoza Florencia Antonia", "Prieto Alarcón Mayte Antonia", 
+                "Ramírez Ávila Abril Lucía", "Reveco Rojas Ignacia", "Riffo Fernández Agustín Alonso", 
+                "Salazar Quiroga Simón Ismael", "Salinas Gómez Isidora Agustina", "Sandoval Acevedo Javiera Ignacia", 
+                "Schüller Vásquez Santiago Ernesto", "Seccia Orellana Ignacio Agustín", "Seisdedos Carvajal Loreto Paz", 
+                "Solorzano Torres Mateo Gaspar", "Valdés Oyarzún Moira Carolina Denisse", "Veliz Joo Consuelo Alejandra", 
+                "Villena Arriagada Javiera Paz", "Zegers Silva Amelia", "Zurita Bustos Franco Salvador"
+            ]
+        };
+
+        // Populate Student Dropdown dynamically based on selected class
+        function updateStudentDropdown() {
+            const classSelect = document.getElementById('class-select');
+            const studentSelect = document.getElementById('student-select');
+            const selectedClass = classSelect.value;
+
+            studentSelect.innerHTML = '<option value="">Select your name</option>';
+
+            if (selectedClass && studentsData[selectedClass]) {
+                studentsData[selectedClass].forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student;
+                    option.textContent = student;
+                    studentSelect.appendChild(option);
+                });
+                studentSelect.disabled = false;
+            } else {
+                studentSelect.disabled = true;
+            }
+        }
+
+        // Recording logic and MediaRecorder state management
+        const recorders = {};
+        const audioChunks = {};
+        const mediaStreams = {};
+
+        async function startRecording(qId) {
+            const warningEl = document.getElementById('mic-warning');
+            const studentSelect = document.getElementById('student-select');
+            
+            if (!studentSelect.value) {
+                alert('Please select your class and name before recording!');
+                studentSelect.focus();
+                return;
+            }
+
+            warningEl.style.display = 'none';
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaStreams[qId] = stream;
+                
+                recorders[qId] = new MediaRecorder(stream);
+                audioChunks[qId] = [];
+
+                recorders[qId].ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks[qId].push(event.data);
+                    }
+                };
+
+                recorders[qId].onstop = () => {
+                    const audioBlob = new Blob(audioChunks[qId], { type: 'audio/webm' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    const playbackElement = document.getElementById(`audio-playback-${qId}`);
+                    playbackElement.src = audioUrl;
+
+                    const studentName = document.getElementById('student-select').value || 'Student';
+                    const downloadBtn = document.getElementById(`download-btn-${qId}`);
+                    
+                    downloadBtn.href = audioUrl;
+                    downloadBtn.download = `${studentName} speaking task 2 q${qId}.webm`;
+
+                    document.getElementById(`playback-container-${qId}`).classList.add('visible');
+
+                    if (mediaStreams[qId]) {
+                        mediaStreams[qId].getTracks().forEach(track => track.stop());
+                    }
+                };
+
+                recorders[qId].start();
+                updateUIState(qId, true);
+
+            } catch (err) {
+                console.error('Microphone Access Error:', err);
+                warningEl.style.display = 'block';
+            }
+        }
+
+        function stopRecording(qId) {
+            if (recorders[qId] && recorders[qId].state !== 'inactive') {
+                recorders[qId].stop();
+                updateUIState(qId, false);
+            }
+        }
+
+        function updateUIState(qId, isRecording) {
+            const card = document.getElementById(`q${qId}`);
+            const startBtn = card.querySelector('.btn-record');
+            const stopBtn = card.querySelector('.btn-stop');
+            const statusDot = document.getElementById(`dot-${qId}`);
+            const statusText = document.getElementById(`status-${qId}`);
+
+            if (isRecording) {
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                statusDot.classList.add('active');
+                statusText.textContent = 'Recording...';
+                statusText.style.color = 'var(--danger)';
+            } else {
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                statusDot.classList.remove('active');
+                statusText.textContent = 'Recorded';
+                statusText.style.color = 'var(--success)';
+            }
+        }
+    </script>
+</body>
+</html>
